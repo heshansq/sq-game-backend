@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1704.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoGame", "TodoGame\TodoGame.csproj", "{0B53D6E1-2AA6-4415-8AB6-16F537FF43AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B53D6E1-2AA6-4415-8AB6-16F537FF43AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B53D6E1-2AA6-4415-8AB6-16F537FF43AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B53D6E1-2AA6-4415-8AB6-16F537FF43AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B53D6E1-2AA6-4415-8AB6-16F537FF43AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C0CECA6-2169-40A8-8BAD-88AF7AF0D3C7}
+	EndGlobalSection
+EndGlobal
