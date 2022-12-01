@@ -4,19 +4,17 @@ namespace TodoGame.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class GameController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    public GameController() { }
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    [HttpGet]
+    public IActionResult getAllGameUsers()
     {
-        _logger = logger;
+        return null;
     }
+
+    /*
 
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
@@ -29,5 +27,8 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
+
+     */
+
 }
 
