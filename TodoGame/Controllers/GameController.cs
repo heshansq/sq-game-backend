@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TodoGame.Services;
 
 namespace TodoGame.Controllers;
 
@@ -6,12 +7,16 @@ namespace TodoGame.Controllers;
 [Route("[controller]")]
 public class GameController : ControllerBase
 {
-    public GameController() { }
+    private readonly IPokeDexService _pokeDexService;
+
+    public GameController(IPokeDexService pokeDexService) {
+        _pokeDexService = pokeDexService;
+    }
 
     [HttpGet]
     public IActionResult getAllGameUsers()
     {
-        return null;
+        return Ok(_pokeDexService.GetPokeDices());
     }
 
     /*
