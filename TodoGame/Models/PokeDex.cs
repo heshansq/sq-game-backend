@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace TodoGame.Models
 {
+    [BsonIgnoreExtraElements]
 	public class PokeDex
 	{
 	
@@ -16,21 +17,29 @@ namespace TodoGame.Models
 
         public string? description { get; set; }
 
-        public string evolution { get; set; }
+        public string? desc { get; set; }
 
-        public int stage { get; set; }
+        public string? species { get; set; }
 
-        public int evolveAt { get; set; }
+        public string? evolution { get; set; }
 
-        public string[] types { get; set; }
+        public int? stage { get; set; }
 
-        public object[] evYield { get; set; }
+        public int? evolveAt { get; set; }
 
-        public int exp { get; set; }
+        public string[]? types { get; set; }
 
-        public object basestats { get; set; }
+        //public object[]? evYield { get; set; }
 
-        public Move move { get; set; }
+        public int? exp { get; set; }
+
+        public Move? move { get; set; }
+
+        public StatsObject? evYield { get; set; }
+
+        public StatsObject? baseStats { get; set; }
+
+        public int? expYield { get; set; }
     }
 }
 

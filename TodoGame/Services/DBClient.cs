@@ -13,7 +13,9 @@ namespace TodoGame.Services
             var client = new MongoClient(dbConfig.Value.Database_Connection_String);
             var database = client.GetDatabase(dbConfig.Value.Database_Name);
 
-            _pokeDices = database.GetCollection<PokeDex>(dbConfig.Value.Poke_Dex_Collection);
+            var dtt = database.GetCollection<PokeDex>(dbConfig.Value.Poke_Dex_Collection);
+
+            _pokeDices = dtt;
 		}
 
         public IMongoCollection<PokeDex> GetPokeDexCollection() => _pokeDices;

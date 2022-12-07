@@ -21,6 +21,8 @@ internal class Program
 
 
         builder.Services.AddControllers();
+        builder.Services.AddSingleton<IDBClient, DBClient>();
+        //builder.Services.Configure<DBConfig>(Configuration);
         builder.Services.AddTransient<IPokeDexService, PokeDexService>();
         builder.Services.AddHttpContextAccessor();
 

@@ -3,7 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace TodoGame.Models
 {
-	public class User
+    [BsonIgnoreExtraElements]
+    public class User
 	{
 		public User()
 		{
