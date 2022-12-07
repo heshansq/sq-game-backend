@@ -7,6 +7,8 @@ namespace TodoGame.Services
 	public interface IDBClient
 	{
         IMongoCollection<PokeDex> GetPokeDexCollection();
-	}
+		IMongoCollection<User> GetUserCollection();
+
+    }
 }
 

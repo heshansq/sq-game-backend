@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TodoGame.Services;
 
 namespace TodoGame.Controllers;
@@ -14,6 +15,7 @@ public class GameController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult getAllGameUsers()
     {
         return Ok(_pokeDexService.GetPokeDices());

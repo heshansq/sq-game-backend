@@ -7,7 +7,9 @@ namespace TodoGame.Config
 
 		public string Poke_Dex_Collection { get; set; }
 
-		public string Database_Connection_String { get; set; }
+        public string User_Collection { get; set; }
+
+        public string Database_Connection_String { get; set; }
 	}
 }
 
