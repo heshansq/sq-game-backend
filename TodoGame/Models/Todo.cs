@@ -18,8 +18,9 @@ namespace TodoGame.Models
 
         public string title { get; set; }
         public string? desc { get; set; }
-        public int priority { get; set; } //1 - Small, 2 - Medium, 3 - Critical
+        public int priority { get; set; } //0 - Small, 1 - Medium, 2 - Critical
         public User? aluser { get; set; }
+        public int status { get; set; } //0 - Pending 1 - in Progress 2 - Completed
     }
 }
 

@@ -8,6 +8,7 @@ namespace TodoGame.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class TodoController : ControllerBase
     {
         private readonly ITodoService todoService;
@@ -20,7 +21,6 @@ namespace TodoGame.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult getAllTodo()
         {
             return Ok(todoService.getAllTodo());
@@ -33,13 +33,13 @@ namespace TodoGame.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult<Todo> addTodo(TodoDto todo)
         {
             Todo userTodo = new Todo();
             userTodo.title = todo.title;
             userTodo.desc = todo.desc;
             userTodo.priority = todo.priority;
+            userTodo.status = todo.status;
 
             User allocatedUser = userService.GetUser(todo.userid);
             userTodo.aluser = allocatedUser;

@@ -11,6 +11,7 @@ namespace TodoGame.Models
 		public string desc { get; set; }
         public int priority { get; set; }
 		public string userid { get; set; }
+        public int status { get; set; }
     }
 }
 
