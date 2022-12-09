@@ -7,7 +7,7 @@ namespace TodoGame.Services.Impl
 	public class PokeDexService: IPokeDexService
 	{
 
-        private readonly MongoDB.Driver.IMongoCollection<PokeDex> _pokeDices;
+        private readonly IMongoCollection<PokeDex> _pokeDices;
 
 		public PokeDexService(IDBClient dbClient)
 		{
