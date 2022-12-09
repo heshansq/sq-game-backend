@@ -28,6 +28,7 @@ internal class Program
         //builder.Services.Configure<DBConfig>(Configuration);
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<IPokeDexService, PokeDexService>();
+        builder.Services.AddTransient<ITodoService, TodoService>();
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.Configure<DBConfig>(builder.Configuration.GetSection("MongoConnection"));

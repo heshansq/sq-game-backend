@@ -9,6 +9,8 @@ namespace TodoGame.Config
 
         public string User_Collection { get; set; }
 
+		public string Todo_Collection { get; set; }
+
         public string Database_Connection_String { get; set; }
 	}
 }

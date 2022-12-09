@@ -22,7 +22,7 @@ namespace TodoGame.Services.Impl
 
 		public List<User> GetAllUsers() => _users.Find(user => true).ToList();
 
-		public User GetUser(string id) => _users.Find<User>(user => user.Id.ToString() == id).FirstOrDefault();
+		public User GetUser(string id) => _users.Find<User>(user => user.Id == id).FirstOrDefault();
 
 		public User CreateUser(User user) {
 			_users.InsertOne(user);

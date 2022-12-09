@@ -8,6 +8,7 @@ namespace TodoGame.Services
 	{
         private readonly IMongoCollection<PokeDex> _pokeDices;
         private readonly IMongoCollection<User> _users;
+        private readonly IMongoCollection<Todo> _todos;
 
         public DBClient(Microsoft.Extensions.Options.IOptions<Config.DBConfig> dbConfig)
 		{
@@ -18,10 +19,14 @@ namespace TodoGame.Services
 
             _pokeDices = dtt;
             _users = database.GetCollection<User>(dbConfig.Value.User_Collection);
+            _todos = database.GetCollection<Todo>(dbConfig.Value.Todo_Collection);
 
         }
 
         public IMongoCollection<PokeDex> GetPokeDexCollection() => _pokeDices;
+
+        public IMongoCollection<Todo> GetTodoCollection() => _todos;
+
         public IMongoCollection<User> GetUserCollection() => _users;
     }
 }
