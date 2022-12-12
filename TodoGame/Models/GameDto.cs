@@ -11,6 +11,7 @@ namespace TodoGame.Models
         public int type { get; set; }
         public int status { get; set; }
 		public string gamestartuser { get; set; }
+		public string gameopponent { get; set; }
     }
 }
 

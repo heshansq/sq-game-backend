@@ -45,6 +45,8 @@ public class UserController : ControllerBase
         saveUser.password = hashedPassword.hash;
         saveUser.storedsalt = str;
         saveUser.email = user.email;
+        saveUser.tickets = 10;
+        //saveUser.tickets = 0;
 
         return userService.CreateUser(saveUser);
 	}
