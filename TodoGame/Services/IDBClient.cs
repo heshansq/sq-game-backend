@@ -9,6 +9,7 @@ namespace TodoGame.Services
         IMongoCollection<PokeDex> GetPokeDexCollection();
 		IMongoCollection<User> GetUserCollection();
 		IMongoCollection<Todo> GetTodoCollection();
+		IMongoCollection<Game> GetGameCollection();
     }
 }
 

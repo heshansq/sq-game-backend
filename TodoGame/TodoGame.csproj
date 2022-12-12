@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.18.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
@@ -25,12 +26,14 @@
     <None Remove="MongoDB.Driver" />
     <None Remove="Services\Impl\" />
     <None Remove="Config\" />
+    <None Remove="Events\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Models\" />
     <Folder Include="Services\Impl\" />
     <Folder Include="Config\" />
+    <Folder Include="Events\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" />

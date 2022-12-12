@@ -12,6 +12,8 @@ namespace TodoGame.Config
 		public string Todo_Collection { get; set; }
 
         public string Database_Connection_String { get; set; }
+
+		public string Game_Collection { get; set; }
 	}
 }
 

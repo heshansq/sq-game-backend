@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using TodoGame.Models;
 
@@ -9,8 +10,9 @@ namespace TodoGame.Services
         private readonly IMongoCollection<PokeDex> _pokeDices;
         private readonly IMongoCollection<User> _users;
         private readonly IMongoCollection<Todo> _todos;
+        private readonly IMongoCollection<Game> _games;
 
-        public DBClient(Microsoft.Extensions.Options.IOptions<Config.DBConfig> dbConfig)
+        public DBClient(IOptions<Config.DBConfig> dbConfig)
 		{
             var client = new MongoClient(dbConfig.Value.Database_Connection_String);
             var database = client.GetDatabase(dbConfig.Value.Database_Name);
@@ -20,6 +22,7 @@ namespace TodoGame.Services
             _pokeDices = dtt;
             _users = database.GetCollection<User>(dbConfig.Value.User_Collection);
             _todos = database.GetCollection<Todo>(dbConfig.Value.Todo_Collection);
+            _games = database.GetCollection<Game>(dbConfig.Value.Game_Collection);
 
         }
 
@@ -28,6 +31,8 @@ namespace TodoGame.Services
         public IMongoCollection<Todo> GetTodoCollection() => _todos;
 
         public IMongoCollection<User> GetUserCollection() => _users;
+
+        public IMongoCollection<Game> GetGameCollection() => _games;
     }
 }
 
