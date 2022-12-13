@@ -51,6 +51,11 @@ namespace TodoGame.Services.Impl
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var tokenKey = Encoding.ASCII.GetBytes(_key);
 
+			var claimEmail = new Claim(ClaimTypes.Email, email);
+			var claimIdentifier = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
+			var claimsIdentity = new ClaimsIdentity(new[] { claimEmail, claimIdentifier }, "serverAuth");
+			var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
 			var tokenDescriptor = new SecurityTokenDescriptor()
 			{
 				Subject = new ClaimsIdentity(new Claim[]

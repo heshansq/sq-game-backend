@@ -1,9 +1,11 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using TodoGame.Config;
+using TodoGame.Events;
 using TodoGame.Services;
 using TodoGame.Services.Impl;
 
@@ -30,7 +32,14 @@ internal class Program
         builder.Services.AddTransient<IPokeDexService, PokeDexService>();
         builder.Services.AddTransient<ITodoService, TodoService>();
         builder.Services.AddTransient<IGameService, GameService>();
+        builder.Services.AddTransient<ISignalRMessageService, SignalRMessageService>();
         builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddSignalR();
+        builder.Services.AddResponseCompression(opt =>
+        {
+            opt.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] {"application/octet-stream"});
+        });
 
         builder.Services.Configure<DBConfig>(builder.Configuration.GetSection("MongoConnection"));
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,6 +72,8 @@ internal class Program
             app.UseSwaggerUI();
         }
 
+        app.UseResponseCompression();
+
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
@@ -70,6 +81,8 @@ internal class Program
         app.UseAuthentication();
 
         app.MapControllers();
+
+        app.MapHub<SingalRGameEvent>("/gamehub");
 
         app.Run();
     }

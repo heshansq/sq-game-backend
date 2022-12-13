@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using TodoGame.Events;
 using TodoGame.Models;
 using TodoGame.Services;
+using TodoGame.Services.Impl;
 
 namespace TodoGame.Controllers;
 
@@ -15,10 +17,15 @@ public class GameController : ControllerBase
     private readonly IUserService _userService;
     private readonly IGameService _gameService;
 
-    public GameController(IPokeDexService pokeDexService, IUserService userService, IGameService gameService) {
+    private readonly ISignalRMessageService _signalRMessageService;
+
+    //private HubConnection hubConnection;
+
+    public GameController(IPokeDexService pokeDexService, IUserService userService, IGameService gameService, ISignalRMessageService signalRMessageService) {
         _pokeDexService = pokeDexService;
         _userService = userService;
         _gameService = gameService;
+        _signalRMessageService = signalRMessageService;
     }
 
     [HttpGet]
@@ -54,6 +61,15 @@ public class GameController : ControllerBase
         {
             User gameOpUser = _userService.GetUser(gameData.gameopponent);
             gameSt.gameopponent = gameOpUser;
+
+            
+            SignalRMessage message = new SignalRMessage();
+            message.messageType = "gameStart";
+            message.startuserid = gameStartUser.Id.ToString();
+            message.opuserid = gameOpUser.Id.ToString();
+            message.message = "startgame";
+            _signalRMessageService.sendGameStatusNotificationAsync(message);
+            
         }
 
         var ticketAmt = gameStartUser.tickets != 0 ? gameStartUser.tickets - 1 : 0;

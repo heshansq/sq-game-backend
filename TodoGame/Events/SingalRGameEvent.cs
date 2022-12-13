@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.SignalR;
+using TodoGame.Models;
 
 namespace TodoGame.Events
 {
@@ -9,9 +10,10 @@ namespace TodoGame.Events
 		{
 		}
 
-        public async Task sendGameStartData(string gameStartMessage)
+        public async Task sendGameStartData(SignalRMessage signalRMessage)
         {
-            await Clients.All.SendAsync("newMessage", "anonymous", gameStartMessage);
+            var users = new string[] { signalRMessage.startuserid, signalRMessage.opuserid };
+            await Clients.Users(users).SendAsync(signalRMessage.messageType, signalRMessage);
         }
     }
 }
