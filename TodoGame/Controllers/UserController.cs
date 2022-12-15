@@ -56,14 +56,16 @@ public class UserController : ControllerBase
 	[HttpPost]
 	public ActionResult Login([FromBody] User user)
 	{
-		var token = userService.Authenticate(user.email, user.password);
+        UserLoginDto userLoginDto = userService.Authenticate(user.email, user.password);
+
+        var token = userLoginDto.token;
 
 		if (token == null)
 		{
 			return Unauthorized();
 		}
 
-		return Ok(new {token, user});
+		return Ok(userLoginDto);
 	}
 
     public static byte[] GetBytes(string str)

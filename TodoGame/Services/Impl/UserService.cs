@@ -29,7 +29,7 @@ namespace TodoGame.Services.Impl
 			return user;
 		}
 
-		public string Authenticate(string email, string password)
+		public UserLoginDto Authenticate(string email, string password)
 		{
             //var user = _users.Find(x => x.email == email && x.password == password).FirstOrDefault();
             var user = _users.Find(x => x.email == email).FirstOrDefault();
@@ -69,7 +69,11 @@ namespace TodoGame.Services.Impl
 
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 
-			return tokenHandler.WriteToken(token);
+			UserLoginDto userLoginDto = new UserLoginDto();
+			userLoginDto.user = user;
+			userLoginDto.token = tokenHandler.WriteToken(token);
+
+            return userLoginDto;
 		}
 
         public static byte[] GetBytes(string str)

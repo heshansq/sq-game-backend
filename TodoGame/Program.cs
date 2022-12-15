@@ -22,11 +22,10 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
 
         builder.Services.AddControllers();
         builder.Services.AddSingleton<IDBClient, DBClient>();
+        //builder.Services.AddSingleton<SignalRGameEventHub>();
         //builder.Services.Configure<DBConfig>(Configuration);
         builder.Services.AddTransient<IUserService, UserService>();
         builder.Services.AddTransient<IPokeDexService, PokeDexService>();
@@ -34,12 +33,6 @@ internal class Program
         builder.Services.AddTransient<IGameService, GameService>();
         builder.Services.AddTransient<ISignalRMessageService, SignalRMessageService>();
         builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddSignalR();
-        builder.Services.AddResponseCompression(opt =>
-        {
-            opt.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] {"application/octet-stream"});
-        });
 
         builder.Services.Configure<DBConfig>(builder.Configuration.GetSection("MongoConnection"));
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,8 +56,51 @@ internal class Program
             };
         });
 
-        var app = builder.Build();
 
+        /*
+         builder.Services.AddResponseCompression(opt =>
+        {
+            opt.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+        });
+         */
+
+        /**
+         * 
+         builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowAnyOrigin();
+            });
+        });
+         */
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowSpecificOrigin",
+                builder =>
+                builder.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:7214")
+                    .AllowCredentials()
+                    //.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+                    //.SetIsOriginAllowedToAllowWildcardSubdomains());
+        });
+
+        builder.Services.AddSignalR();
+
+        var app = builder.Build();
+        app.UseStaticFiles();
+        /*
+         app.UseCors(builder => builder
+         .AllowAnyHeader()
+         .AllowAnyMethod()
+         .AllowCredentials()
+         .WithOrigins("http://localhost:3000", "http://localhost:7214"));
+
+        */
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -72,9 +108,9 @@ internal class Program
             app.UseSwaggerUI();
         }
 
-        app.UseResponseCompression();
-
-        app.UseHttpsRedirection();
+        //app.UseResponseCompression();
+        app.UseCors("AllowSpecificOrigin");
+        //app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
@@ -82,7 +118,7 @@ internal class Program
 
         app.MapControllers();
 
-        app.MapHub<SingalRGameEvent>("/gamehub");
+        app.MapHub<SignalRGameEventHub>("/signalRGameEventHub");
 
         app.Run();
     }

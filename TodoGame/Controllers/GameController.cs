@@ -43,6 +43,7 @@ public class GameController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public IActionResult createNewGame(GameDto gameData)
     {
         Game gameSt = new Game();

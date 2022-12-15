@@ -8,7 +8,7 @@ namespace TodoGame.Services
 		List<User> GetAllUsers();
 		User GetUser(string id);
 		User CreateUser(User user);
-		string Authenticate(string email, string password);
+		UserLoginDto Authenticate(string email, string password);
     }
 }
 
