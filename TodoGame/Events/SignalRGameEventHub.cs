@@ -11,13 +11,17 @@ namespace TodoGame.Events
 		{
 		}
 
+        public string GetConnectionId()
+        {
+            return Context.ConnectionId;
+        }
 
         public async Task sendGameStartData(SignalRMessage signalRMessage)
         {
             var users = new string[] { signalRMessage.startuserid, signalRMessage.opuserid };
             //await Clients.Users(users).SendAsync(signalRMessage.messageType, signalRMessage);
             var jsonString = JsonConvert.SerializeObject(signalRMessage);
-            await Clients.Users(users).SendAsync(signalRMessage.messageType, "2233");
+            await Clients.Clients(users).SendAsync(signalRMessage.messageType, jsonString);
         }
     }
 }

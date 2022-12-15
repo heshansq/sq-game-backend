@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using TodoGame.Models;
 using TodoGame.Services;
 using TodoGame.Services.Impl;
@@ -46,6 +47,7 @@ public class UserController : ControllerBase
         saveUser.storedsalt = str;
         saveUser.email = user.email;
         saveUser.tickets = 10;
+        saveUser.connectionid = "";
         //saveUser.tickets = 0;
 
         return userService.CreateUser(saveUser);
@@ -67,6 +69,16 @@ public class UserController : ControllerBase
 
 		return Ok(userLoginDto);
 	}
+
+    [AllowAnonymous]
+    [Route("connectionid")]
+    [HttpPost]
+    public ActionResult UpdateConnectionId([FromBody] ConnectionDto connectionDto)
+    {
+        UpdateResult userUpdate = userService.UpdateConnectionId(connectionDto.userId, connectionDto.connectionId);
+        
+        return Ok(userUpdate);
+    }
 
     public static byte[] GetBytes(string str)
     {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Claims;
+
 namespace TodoGame.Models
 {
 	public class UserLoginDto
@@ -9,6 +11,6 @@ namespace TodoGame.Models
 
 		public User user { get; set; }
 		public string token { get; set; }
-	}
+    }
 }
 

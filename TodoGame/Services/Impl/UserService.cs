@@ -29,7 +29,15 @@ namespace TodoGame.Services.Impl
 			return user;
 		}
 
-		public UserLoginDto Authenticate(string email, string password)
+        public UpdateResult UpdateConnectionId(string userid, string? connectionId)
+        {
+            var filter = Builders<User>.Filter.Eq("Id", userid);
+            var update = Builders<User>.Update.Set("connectionid", connectionId);
+
+            return _users.UpdateOne(filter, update);
+        }
+
+        public UserLoginDto Authenticate(string email, string password)
 		{
             //var user = _users.Find(x => x.email == email && x.password == password).FirstOrDefault();
             var user = _users.Find(x => x.email == email).FirstOrDefault();
@@ -51,7 +59,7 @@ namespace TodoGame.Services.Impl
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var tokenKey = Encoding.ASCII.GetBytes(_key);
 
-			var claimEmail = new Claim(ClaimTypes.Email, email);
+			var claimEmail = new Claim(ClaimTypes.Email, email.ToString());
 			var claimIdentifier = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
 			var claimsIdentity = new ClaimsIdentity(new[] { claimEmail, claimIdentifier }, "serverAuth");
 			var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);

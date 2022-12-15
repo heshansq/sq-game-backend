@@ -63,11 +63,17 @@ public class GameController : ControllerBase
             User gameOpUser = _userService.GetUser(gameData.gameopponent);
             gameSt.gameopponent = gameOpUser;
 
-            
+            var opuserid = "";
+
+            if (gameOpUser.connectionid != null)
+            {
+                opuserid = gameOpUser.connectionid;
+            }
+
             SignalRMessage message = new SignalRMessage();
             message.messageType = "gameStart";
-            message.startuserid = gameStartUser.Id.ToString();
-            message.opuserid = gameOpUser.Id.ToString();
+            message.startuserid = gameStartUser.connectionid.ToString();
+            message.opuserid = opuserid.ToString();
             message.message = "startgame";
             _signalRMessageService.sendGameStatusNotificationAsync(message);
             

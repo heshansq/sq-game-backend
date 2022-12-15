@@ -32,6 +32,8 @@ namespace TodoGame.Models
         public string? storedsalt { get; set; }
 
         public int? tickets { get; set; }
+
+        public string? connectionid { get; set; }
     }
 }
 

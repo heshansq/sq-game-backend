@@ -15,13 +15,18 @@ namespace TodoGame.Services.Impl
 			_hub = hub;
 		}
 
+        public string GetConnectionId()
+        {
+            return "";
+        }
+
         public Task sendGameStatusNotificationAsync(SignalRMessage signalRMessage)
         {
             if (signalRMessage is not null)
             {
                 var users = new string[] { signalRMessage.startuserid, signalRMessage.opuserid };
                 var jsonString = JsonConvert.SerializeObject(signalRMessage);
-                return _hub.Clients.All.SendAsync(signalRMessage.messageType, jsonString);
+                return _hub.Clients.Clients(users).SendAsync(signalRMessage.messageType, jsonString);
                 // return _hub.Clients.Users(users).SendAsync(signalRMessage.messageType, signalRMessage);
             }
 

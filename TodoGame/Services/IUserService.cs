@@ -1,4 +1,5 @@
 ﻿using System;
+using MongoDB.Driver;
 using TodoGame.Models;
 
 namespace TodoGame.Services
@@ -9,6 +10,7 @@ namespace TodoGame.Services
 		User GetUser(string id);
 		User CreateUser(User user);
 		UserLoginDto Authenticate(string email, string password);
+		UpdateResult UpdateConnectionId(string userid, string? connectionId);
     }
 }
 
