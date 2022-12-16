@@ -102,6 +102,8 @@ namespace TodoGame.Services.Impl
             ));
             return encryptedPassw == storedPassword;
         }
+
+        public List<User> GetOnlineUsers() => _users.Find(user => user.connectionid != "" && user.connectionid != null).ToList();
     }
 }
 

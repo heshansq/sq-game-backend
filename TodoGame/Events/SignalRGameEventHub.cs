@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.SignalR;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using TodoGame.Models;
 
@@ -22,6 +23,11 @@ namespace TodoGame.Events
             //await Clients.Users(users).SendAsync(signalRMessage.messageType, signalRMessage);
             var jsonString = JsonConvert.SerializeObject(signalRMessage);
             await Clients.Clients(users).SendAsync(signalRMessage.messageType, jsonString);
+        }
+
+        public async Task sendOnlineUsers(List<User> onlineUsers)
+        {
+            await Clients.All.SendAsync("onlineUsers", onlineUsers);
         }
     }
 }

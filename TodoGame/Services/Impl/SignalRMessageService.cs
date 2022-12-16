@@ -32,6 +32,11 @@ namespace TodoGame.Services.Impl
 
             return Task.CompletedTask;
         }
+
+        public Task sendOnlineUsers(List<User> onlineUsers)
+        {
+            return _hub.Clients.All.SendAsync("onlineUsers", onlineUsers);
+        }
     }
 }
 

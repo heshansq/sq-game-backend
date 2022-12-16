@@ -8,6 +8,7 @@ namespace TodoGame.Models
 		}
 
         public string? Id { get; set; }
+		public string? gamename { get; set; }
         public int type { get; set; }
         public int status { get; set; }
 		public string gamestartuser { get; set; }

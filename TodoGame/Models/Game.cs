@@ -17,6 +17,8 @@ namespace TodoGame.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
+        public string? gamename { get; set; }
+
         public int type { get; set; }
 
         public int status { get; set; } // 0 - Pending 1 - Started 2 - Completed

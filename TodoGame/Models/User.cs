@@ -29,6 +29,8 @@ namespace TodoGame.Models
 
 		public string password { get; set; }
 
+        public string? name { get; set; }
+
         public string? storedsalt { get; set; }
 
         public int? tickets { get; set; }

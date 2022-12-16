@@ -17,10 +17,12 @@ namespace TodoGame.Controllers;
 public class UserController : ControllerBase
 {
 	private readonly IUserService userService;
+    private readonly ISignalRMessageService _signalRMessageService;
 
-    public UserController(IUserService _userService)
+    public UserController(IUserService _userService, ISignalRMessageService signalRMessageService)
 	{
 		userService = _userService;
+        _signalRMessageService = signalRMessageService;
 	}
 
 	[HttpGet]
@@ -29,7 +31,15 @@ public class UserController : ControllerBase
 		return userService.GetAllUsers();
 	}
 
-	[HttpGet("{id}")]
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("onlineusers")]
+    public ActionResult<List<User>> GetOnlineUsers()
+    {
+        return userService.GetOnlineUsers();
+    }
+
+    [HttpGet("{id}")]
 	public ActionResult<User> GetUser(string id) {
 		return userService.GetUser(id);
 	}
@@ -48,6 +58,7 @@ public class UserController : ControllerBase
         saveUser.email = user.email;
         saveUser.tickets = 10;
         saveUser.connectionid = "";
+        saveUser.name = user.name;
         //saveUser.tickets = 0;
 
         return userService.CreateUser(saveUser);
@@ -76,7 +87,8 @@ public class UserController : ControllerBase
     public ActionResult UpdateConnectionId([FromBody] ConnectionDto connectionDto)
     {
         UpdateResult userUpdate = userService.UpdateConnectionId(connectionDto.userId, connectionDto.connectionId);
-        
+        List<User> onlineUsers = userService.GetOnlineUsers();
+        _signalRMessageService.sendOnlineUsers(onlineUsers);
         return Ok(userUpdate);
     }
 

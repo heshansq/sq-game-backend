@@ -49,6 +49,7 @@ public class GameController : ControllerBase
         Game gameSt = new Game();
         gameSt.type = gameData.type;
         gameSt.status = gameData.status;
+        gameSt.gamename = gameData.gamename;
 
         User gameStartUser = _userService.GetUser(gameData.gamestartuser);
         gameSt.gamestartuser = gameStartUser;
