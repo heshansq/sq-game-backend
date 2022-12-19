@@ -51,7 +51,6 @@ namespace TodoGame.Controllers
         }
 
         [HttpPut("{id}")]
-        [AllowAnonymous]
         public IActionResult updateTodo([FromBody] TodoDto todo, [FromRoute] string id)
         {
             Todo userTodo = new Todo();
