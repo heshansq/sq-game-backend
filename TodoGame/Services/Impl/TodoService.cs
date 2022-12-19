@@ -25,7 +25,16 @@ namespace TodoGame.Services.Impl
 
         public List<Todo> getAllTodoByUser(string userId)
         {
+
             return _todoList.Find(todo => todo.aluser.Id == userId).ToList();
+        }
+
+        public UpdateResult updateTodo(string id, Todo todo)
+        {
+            var filter = Builders<Todo>.Filter.Eq("Id", id);
+            var update = Builders<Todo>.Update.Set("status", todo.status).Set("title", todo.title).Set("desc", todo.desc).Set("priority", todo.priority);
+
+            return _todoList.UpdateOne(filter, update);
         }
     }
 }

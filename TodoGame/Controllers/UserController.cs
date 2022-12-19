@@ -64,12 +64,17 @@ public class UserController : ControllerBase
         return userService.CreateUser(saveUser);
 	}
 
-	[AllowAnonymous]
 	[Route("authenticate")]
-	[HttpPost]
+    [AllowAnonymous]
+    [HttpPost]
 	public ActionResult Login([FromBody] User user)
 	{
         UserLoginDto userLoginDto = userService.Authenticate(user.email, user.password);
+
+        if (userLoginDto == null)
+        {
+            return Unauthorized();
+        }
 
         var token = userLoginDto.token;
 

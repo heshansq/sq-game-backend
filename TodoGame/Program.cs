@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +57,16 @@ internal class Program
             };
         });
 
+        builder.Services.AddAuthorization(options =>
+        {
+            var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                JwtBearerDefaults.AuthenticationScheme);
+
+            defaultAuthorizationPolicyBuilder =
+                defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+
+            options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+        });
 
         /*
          builder.Services.AddResponseCompression(opt =>

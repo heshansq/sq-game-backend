@@ -1,6 +1,7 @@
 ﻿using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace TodoGame.Models
 {
@@ -12,9 +13,9 @@ namespace TodoGame.Models
 		}
 
         [BsonElement("_id")]
-        [BsonId]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }
+        public string? Id { get; set; }
 
         public string title { get; set; }
         public string? desc { get; set; }
