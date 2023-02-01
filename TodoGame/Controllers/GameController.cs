@@ -5,6 +5,14 @@ using TodoGame.Events;
 using TodoGame.Models;
 using TodoGame.Services;
 using TodoGame.Services.Impl;
+using Nethereum.Web3;
+using Nethereum.Signer;
+using Nethereum.Web3.Accounts;
+using Newtonsoft.Json.Linq;
+using Nethereum.Hex.HexTypes;
+using Nethereum.RPC.Eth.DTOs;
+using Nethereum.Hex.HexConvertors.Extensions;
+using System.Numerics;
 
 namespace TodoGame.Controllers;
 
@@ -40,6 +48,56 @@ public class GameController : ControllerBase
     public ActionResult<List<Game>> getUserGameList(string userid)
     {
         return _gameService.listUserGame(userid);
+    }
+
+    [HttpGet("getbalance/{publicaddress}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> getAccPkdtBalance(string publicaddress)
+    {
+        var url = "http://127.0.0.1:7545";
+        var privateKey = "b85debbf6f672e61f2f2895051ded61c6917f20ef14bd269fbe22a7c4e3c7366";
+        var chainId = 1337;
+        var moneyContractAddress = "0x194597Fd39Fe16B1fa424E2b0997a9573d1CAA5B";
+
+        var account = new Account(privateKey, chainId);
+        var web3 = new Web3(account, url);
+
+        var abi = @"[{""inputs"":[],""stateMutability"":""nonpayable"",""type"":""constructor""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""Bought"",""type"":""event""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""Sold"",""type"":""event""},{""inputs"":[],""name"":""token"",""outputs"":[{""internalType"":""contractToken"",""name"":"""",""type"":""address""}],""stateMutability"":""view"",""type"":""function"",""constant"":true},{""inputs"":[],""name"":""buy"",""outputs"":[],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""sell"",""outputs"":[],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[{""internalType"":""address"",""name"":""_to"",""type"":""address""},{""internalType"":""address"",""name"":""_from"",""type"":""address""},{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""transferSingleTokenToWinner"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_to"",""type"":""address""},{""internalType"":""address"",""name"":""_from"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""transferSingleTokenToWinnerWithSpender"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_value"",""type"":""uint256""}],""name"":""approveSpenderSection"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_owner"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_value"",""type"":""uint256""}],""name"":""approveSpenderFromOwner"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_owner"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""}],""name"":""getAllowance"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""name"":""getAmountCheck"",""outputs"":[{""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[],""name"":""currentBalance"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_useraddress"",""type"":""address""}],""name"":""currentBalanceUser"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""}]";
+        var contract = web3.Eth.GetContract(abi, moneyContractAddress);
+
+        var currentBalanceFunction = contract.GetFunction("currentBalanceUser");
+        uint balance = await currentBalanceFunction.CallAsync<uint>(publicaddress);
+
+        return Ok(balance);
+    }
+
+    [HttpGet("transfertoken/{fromAddress}/{toAddress}/{spender}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> transferCoinsToWinner(string fromAddress, string toAddress, string spender)
+    {
+
+        var url = "http://127.0.0.1:7545";
+        var privateKey = "b85debbf6f672e61f2f2895051ded61c6917f20ef14bd269fbe22a7c4e3c7366";
+        var moneyContractAddress = "0x194597Fd39Fe16B1fa424E2b0997a9573d1CAA5B";
+        var chainId = 1337;
+
+        var account = new Account(privateKey, chainId);
+        var web3 = new Web3(account, url);
+
+        var abi = @"[{""inputs"":[],""stateMutability"":""nonpayable"",""type"":""constructor""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""Bought"",""type"":""event""},{""anonymous"":false,""inputs"":[{""indexed"":false,""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""Sold"",""type"":""event""},{""inputs"":[],""name"":""token"",""outputs"":[{""internalType"":""contractToken"",""name"":"""",""type"":""address""}],""stateMutability"":""view"",""type"":""function"",""constant"":true},{""inputs"":[],""name"":""buy"",""outputs"":[],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""sell"",""outputs"":[],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[{""internalType"":""address"",""name"":""_to"",""type"":""address""},{""internalType"":""address"",""name"":""_from"",""type"":""address""},{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""transferSingleTokenToWinner"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_to"",""type"":""address""},{""internalType"":""address"",""name"":""_from"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_amount"",""type"":""uint256""}],""name"":""transferSingleTokenToWinnerWithSpender"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_value"",""type"":""uint256""}],""name"":""approveSpenderSection"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_owner"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""},{""internalType"":""uint256"",""name"":""_value"",""type"":""uint256""}],""name"":""approveSpenderFromOwner"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_owner"",""type"":""address""},{""internalType"":""address"",""name"":""_spender"",""type"":""address""}],""name"":""getAllowance"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[],""name"":""getAmountCheck"",""outputs"":[{""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""stateMutability"":""payable"",""type"":""function"",""payable"":true},{""inputs"":[],""name"":""currentBalance"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""},{""inputs"":[{""internalType"":""address"",""name"":""_useraddress"",""type"":""address""}],""name"":""currentBalanceUser"",""outputs"":[{""internalType"":""uint256"",""name"":""balance"",""type"":""uint256""}],""stateMutability"":""nonpayable"",""type"":""function""}]";
+        var contract = web3.Eth.GetContract(abi, moneyContractAddress);
+
+        //var currentBalanceFunction = contract.GetFunction("transferSingleTokenToWinner");
+        //uint balance = await currentBalanceFunction.CallAsync<uint>(toAddress, fromAddress, 1);
+
+        var transferFundFunction = contract.GetFunction("transferSingleTokenToWinnerWithSpender");
+
+        var gas = new HexBigInteger(100000);
+        web3.TransactionManager.UseLegacyAsDefault = true;
+
+        var txnReceipt = await transferFundFunction.SendTransactionAsync(spender, gas, null, toAddress, fromAddress, spender, 1);
+        return Ok(txnReceipt);
+
     }
 
     [HttpPost]
