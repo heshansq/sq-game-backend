@@ -79,7 +79,7 @@ public class GameController : ControllerBase
 
         var url = "https://rpc.ankr.com/eth_goerli";
         var privateKey = "933a0f6368834b5e3a6e065c729fe09f08c31f4366f4f7e04bd59ef54caf89a2";
-        var moneyContractAddress = "0x8a75f9b59dca3cf0f1bedcab737643283806bbfd";
+        var moneyContractAddress = "0xA17BB8896040B2383277cd3Dc7b871Adec5726ED";
         //var chainId = 1337;
         var chainId = 5;
 
@@ -97,7 +97,7 @@ public class GameController : ControllerBase
         var gas = new HexBigInteger(100000);
         web3.TransactionManager.UseLegacyAsDefault = true;
 
-        var txnReceipt = await transferFundFunction.SendTransactionAsync(spender, gas, null, toAddress, fromAddress, spender, 1);
+        var txnReceipt = await transferFundFunction.SendTransactionAsync(spender, gas, null, toAddress, fromAddress, spender, 10);
         return Ok(txnReceipt);
 
     }
