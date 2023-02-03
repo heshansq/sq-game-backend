@@ -119,6 +119,8 @@ public class GameController : ControllerBase
             return new ObjectResult("User dont have tickets to start a game!") { StatusCode = 403 };
         }
 
+        Game saveGame = _gameService.createGame(gameSt);
+
         if (gameData.gameopponent != null)
         {
             User gameOpUser = _userService.GetUser(gameData.gameopponent);
@@ -136,6 +138,10 @@ public class GameController : ControllerBase
             message.startuserid = gameStartUser.connectionid.ToString();
             message.opuserid = opuserid.ToString();
             message.message = "startgame";
+            message.gameId = saveGame.Id;
+            message.messagetype = 1;
+            message.opuserpublickey = gameOpUser.publickey;
+            message.startuserpublickey = saveGame.gamestartuser.publickey;
             _signalRMessageService.sendGameStatusNotificationAsync(message);
             
         }
@@ -143,9 +149,33 @@ public class GameController : ControllerBase
         var ticketAmt = gameStartUser.tickets != 0 ? gameStartUser.tickets - 1 : 0;
         UpdateResult userUpdate = _gameService.changeTickets(gameData.gamestartuser, ticketAmt);
 
-        Game saveGame = _gameService.createGame(gameSt);
-
         return Ok(saveGame);
     }
+
+    [HttpGet("acceptgame/{opid}/{gameid}")]
+    [AllowAnonymous]
+    public IActionResult acceptGameRequest(string opid, string gameid)
+    {
+
+        User gameOpUser = _userService.GetUser(opid);
+        Game game = _gameService.getGameById(gameid);
+
+
+        SignalRMessage message = new SignalRMessage();
+        message.messageType = "gameAccept";
+        message.startuserid = game.gamestartuser.connectionid.ToString();
+        message.opuserid = gameOpUser.connectionid.ToString();
+        message.message = "acceptGame";
+        message.messagetype = 2;
+        message.opuserpublickey = gameOpUser.publickey;
+        message.startuserpublickey = game.gamestartuser.publickey;
+        _signalRMessageService.sendGameStatusNotificationAsync(message);
+
+        UpdateResult updateGame = _gameService.updateGameStatus(gameid, 1);
+
+        return Ok(updateGame);
+    }
+
+
 }
 

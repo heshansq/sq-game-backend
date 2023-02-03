@@ -36,6 +36,8 @@ namespace TodoGame.Models
         public int? tickets { get; set; }
 
         public string? connectionid { get; set; }
+
+        public string? publickey { get; set; }
     }
 }
 

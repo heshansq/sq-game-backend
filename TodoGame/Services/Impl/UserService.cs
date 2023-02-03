@@ -37,6 +37,14 @@ namespace TodoGame.Services.Impl
             return _users.UpdateOne(filter, update);
         }
 
+        public UpdateResult UpdatePublicKey(string userid, string? publicKey)
+        {
+            var filter = Builders<User>.Filter.Eq("Id", userid);
+            var update = Builders<User>.Update.Set("publickey", publicKey);
+
+            return _users.UpdateOne(filter, update);
+        }
+
         public UserLoginDto Authenticate(string email, string password)
 		{
             //var user = _users.Find(x => x.email == email && x.password == password).FirstOrDefault();

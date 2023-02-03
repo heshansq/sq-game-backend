@@ -12,6 +12,7 @@ namespace TodoGame.Services
 		User CreateUser(User user);
 		UserLoginDto Authenticate(string email, string password);
 		UpdateResult UpdateConnectionId(string userid, string? connectionId);
+		UpdateResult UpdatePublicKey(string userid, string? publicKey);
     }
 }
 

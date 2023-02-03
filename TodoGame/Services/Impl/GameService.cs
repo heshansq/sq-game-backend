@@ -42,6 +42,16 @@ namespace TodoGame.Services.Impl
 
             return _users.UpdateOne(filter, update);
         }
+
+        public UpdateResult updateGameStatus(string gameId, int gameStatus)
+        {
+            var filter = Builders<Game>.Filter.Eq("Id", gameId);
+            var update = Builders<Game>.Update.Set("status", gameStatus);
+
+            return _games.UpdateOne(filter, update);
+        }
+
+        public Game getGameById(string gameId) => _games.Find<Game>(game => game.Id == gameId).FirstOrDefault();
     }
 }
 

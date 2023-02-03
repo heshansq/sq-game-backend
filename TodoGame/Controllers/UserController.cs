@@ -97,6 +97,14 @@ public class UserController : ControllerBase
         return Ok(userUpdate);
     }
 
+    [AllowAnonymous]
+    [HttpGet("updatepublickey/{userid}/{publickey}")]
+    public ActionResult UpdatePublicKey(string userid, string publickey)
+    {
+        UpdateResult userUpdate = userService.UpdatePublicKey(userid, publickey);
+        return Ok(userUpdate);
+    }
+
     public static byte[] GetBytes(string str)
     {
         byte[] bytes = new byte[str.Length * sizeof(char)];
