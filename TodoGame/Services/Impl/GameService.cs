@@ -8,11 +8,13 @@ namespace TodoGame.Services.Impl
 	{
         public readonly IMongoCollection<Game> _games;
         public readonly IMongoCollection<User> _users;
+        private readonly ISignalRMessageService _signalRMessageService;
 
-		public GameService(IDBClient dBClient)
+        public GameService(IDBClient dBClient, ISignalRMessageService signalRMessageService)
 		{
             _games = dBClient.GetGameCollection();
             _users = dBClient.GetUserCollection();
+            _signalRMessageService = signalRMessageService;
 
         }
 
@@ -52,6 +54,23 @@ namespace TodoGame.Services.Impl
         }
 
         public Game getGameById(string gameId) => _games.Find<Game>(game => game.Id == gameId).FirstOrDefault();
+
+        async public Task gameWinningCheck(string gameId)
+        {
+            Thread.Sleep(2000);
+            Game game = this.getGameById(gameId);
+
+
+            SignalRMessage message = new SignalRMessage();
+            message.messageType = "gameAccept";
+            message.startuserid = game.gamestartuser.connectionid.ToString();
+            message.opuserid = game.gameopponent.connectionid.ToString();
+            message.message = "acceptGame";
+            message.messagetype = 2;
+            message.opuserpublickey = game.gameopponent.publickey;
+            message.startuserpublickey = game.gamestartuser.publickey;
+            _signalRMessageService.sendGameStatusNotificationAsync(message);
+        }
     }
 }
 

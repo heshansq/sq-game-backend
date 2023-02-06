@@ -173,6 +173,8 @@ public class GameController : ControllerBase
 
         UpdateResult updateGame = _gameService.updateGameStatus(gameid, 1);
 
+        //gameWinningCheck
+
         return Ok(updateGame);
     }
 

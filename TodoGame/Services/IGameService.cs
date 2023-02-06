@@ -12,6 +12,7 @@ namespace TodoGame.Services
         UpdateResult changeTickets(string gamestartuser, int? ticketAmt);
         UpdateResult updateGameStatus(string gameId, int gameStatus);
         Game getGameById(string gameId);
+        Task gameWinningCheck(string gameId);
     }
 }
 
