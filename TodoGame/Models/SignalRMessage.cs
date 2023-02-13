@@ -15,6 +15,7 @@ namespace TodoGame.Models
 		public int messagetype { get; set; }
 		public string startuserpublickey { get; set; }
         public string opuserpublickey { get; set; }
+		public User winnerUser { get; set; }
     }
 }
 

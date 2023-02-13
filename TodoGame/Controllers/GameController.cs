@@ -172,8 +172,11 @@ public class GameController : ControllerBase
         _signalRMessageService.sendGameStatusNotificationAsync(message);
 
         UpdateResult updateGame = _gameService.updateGameStatus(gameid, 1);
+        UpdateResult updateOpponent = _gameService.updateOpponent(gameid, opid);
 
-        //gameWinningCheck
+        //_gameService.gameWinningCheck(gameid);
+        var startWinningThread = new Thread(() => _gameService.startWinningCheck(gameid));
+        startWinningThread.Start();
 
         return Ok(updateGame);
     }

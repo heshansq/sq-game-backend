@@ -9,12 +9,14 @@ namespace TodoGame.Services.Impl
         public readonly IMongoCollection<Game> _games;
         public readonly IMongoCollection<User> _users;
         private readonly ISignalRMessageService _signalRMessageService;
+        private readonly IUserService _userService;
 
-        public GameService(IDBClient dBClient, ISignalRMessageService signalRMessageService)
+        public GameService(IDBClient dBClient, ISignalRMessageService signalRMessageService, IUserService userService)
 		{
             _games = dBClient.GetGameCollection();
             _users = dBClient.GetUserCollection();
             _signalRMessageService = signalRMessageService;
+            _userService = userService;
 
         }
 
@@ -53,6 +55,15 @@ namespace TodoGame.Services.Impl
             return _games.UpdateOne(filter, update);
         }
 
+        public UpdateResult updateOpponent(string gameId, string opId)
+        {
+            var filter = Builders<Game>.Filter.Eq("Id", gameId);
+            User opUser = _userService.GetUser(opId);
+            var update = Builders<Game>.Update.Set("gameopponent", opUser);
+
+            return _games.UpdateOne(filter, update);
+        }
+
         public Game getGameById(string gameId) => _games.Find<Game>(game => game.Id == gameId).FirstOrDefault();
 
         async public Task gameWinningCheck(string gameId)
@@ -60,15 +71,50 @@ namespace TodoGame.Services.Impl
             Thread.Sleep(2000);
             Game game = this.getGameById(gameId);
 
+            var playersArr = new string[] { game.gamestartuser.Id.ToString(), game.gameopponent.Id.ToString() };
+            Random random = new Random();
+            int winnerIndex = random.Next(0, playersArr.Length);
+
+            string winnerId = playersArr[winnerIndex];
+
+            User winnerUser = _userService.GetUser(winnerId);
+
 
             SignalRMessage message = new SignalRMessage();
-            message.messageType = "gameAccept";
+            message.messageType = "gameWon";
             message.startuserid = game.gamestartuser.connectionid.ToString();
             message.opuserid = game.gameopponent.connectionid.ToString();
-            message.message = "acceptGame";
+            message.message = "gameWon";
             message.messagetype = 2;
             message.opuserpublickey = game.gameopponent.publickey;
             message.startuserpublickey = game.gamestartuser.publickey;
+            message.winnerUser = winnerUser;
+            _signalRMessageService.sendGameStatusNotificationAsync(message);
+        }
+
+        public void startWinningCheck(string gameId)
+        {
+            Thread.Sleep(2000);
+            Game game = this.getGameById(gameId);
+
+            var playersArr = new string[] { game.gamestartuser.Id.ToString(), game.gameopponent.Id.ToString() };
+            Random random = new Random();
+            int winnerIndex = random.Next(0, playersArr.Length);
+
+            string winnerId = playersArr[winnerIndex];
+
+            User winnerUser = _userService.GetUser(winnerId);
+
+
+            SignalRMessage message = new SignalRMessage();
+            message.messageType = "gameWon";
+            message.startuserid = game.gamestartuser.connectionid.ToString();
+            message.opuserid = game.gameopponent.connectionid.ToString();
+            message.message = "gameWon";
+            message.messagetype = 2;
+            message.opuserpublickey = game.gameopponent.publickey;
+            message.startuserpublickey = game.gamestartuser.publickey;
+            message.winnerUser = winnerUser;
             _signalRMessageService.sendGameStatusNotificationAsync(message);
         }
     }
